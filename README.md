@@ -139,7 +139,7 @@ sudo chmod +x /usr/bin/kcptun
 sudo cp kcptun/server/config.json /etc/config/kcptun.json
 ```
 
-- 运行
+- 运行 kcptun
 
 ```shell script
 sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/kcptun.conf
@@ -156,15 +156,6 @@ sudo service supervisor restart
 ./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
 ```
 
-- 下载 kcptun
-
-```shell script
-wget https://github.com/xtaci/kcptun/releases/download/v20200409/kcptun-linux-amd64-20200409.tar.gz
-tar -xzf kcptun-linux-amd64-20200409.tar.gz
-sudo cp server_linux_amd64 /usr/bin/kcptun
-sudo chmod +x /usr/bin/kcptun
-```
-
 - 下载 udp2raw
 
 ```shell script
@@ -174,16 +165,9 @@ sudo cp udp2raw_amd64 /usr/bin/udp2raw
 sudo chmod +x /usr/bin/udp2raw
 ```
 
-- 配置 kcptun
+- 运行 udp2raw
 
 ```shell script
-sudo cp kcptun/server/config.json /etc/kcptun/config.json
-```
-
-- 运行
-
-```shell script
-sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/kcptun.conf
 sudo cp supervisor/udp2raw_kcptun.conf /etc/supervisor/conf.d/udp2raw_kcptun.conf
 sudo service supervisor restart
 ```
@@ -206,7 +190,7 @@ sudo cp speederv2_amd64 /usr/bin/speederv2
 sudo chmod +x /usr/bin/speederv2
 ```
 
-- 运行
+- 运行 UDPspeeder
 
 ```shell script
 sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/speederv2.conf
@@ -223,15 +207,6 @@ sudo service supervisor restart
 ./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
 ```
 
-- 下载 UDPspeeder
-
-```shell script
-wget https://github.com/wangyu-/UDPspeeder/releases/download/20190121.0/speederv2_binaries.tar.gz
-tar -xzf speederv2_binaries.tar.gz
-sudo cp speederv2_amd64 /usr/bin/speederv2
-sudo chmod +x /usr/bin/speederv2
-```
-
 - 下载 udp2raw
 
 ```shell script
@@ -241,10 +216,9 @@ sudo cp udp2raw_amd64 /usr/bin/udp2raw
 sudo chmod +x /usr/bin/udp2raw
 ```
 
-- 运行
+- 运行 udp2raw
 
 ```shell script
-sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/speederv2.conf
 sudo cp supervisor/udp2raw_speederv2.conf /etc/supervisor/conf.d/udp2raw_speederv2.conf
 sudo service supervisor restart
 ```
