@@ -4,25 +4,31 @@
 
 ### Linux
 
-[Github](https://github.com/shadowsocks/shadowsocks-libev#debian--ubuntu)
+[Github](https://github.com/shadowsocks/shadowsocks-libev)
 
-- 安装 Shadowsocks
+- Debian 9
+
+We strongly encourage you to install shadowsocks-libev from `stretch-backports`.
 
 ```shell script
+sudo sh -c 'printf "deb http://deb.debian.org/debian stretch-backports main" > /etc/apt/sources.list.d/stretch-backports.list'
 sudo apt update
-sudo apt install git
-git clone https://github.com/shadowsocks/shadowsocks-libev.git
-cd shadowsocks-libev
-mkdir -p ~/build-area/
-cp ./scripts/build_deb.sh ~/build-area/
-cd ~/build-area
-./build_deb.sh
+sudo apt -t stretch-backports install shadowsocks-libev
 ```
 
 - 配置 Shadowsocks
 
 ```shell script
 sudo vim /etc/shadowsocks-libev/config.json
+{
+    "server":["::1", "127.0.0.1"],
+    "mode":"tcp_and_udp",
+    "server_port":8388,
+    "local_port":1080,
+    "password":"HelloWorld!",
+    "timeout":60,
+    "method":"chacha20-ietf-poly1305"
+}
 ```
 
 - 运行
