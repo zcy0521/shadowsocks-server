@@ -31,10 +31,10 @@ sudo vim /etc/shadowsocks-libev/config.json
 }
 ```
 
-- 运行
+- 运行 Shadowsocks
 
 ```shell script
-sudo /etc/init.d/shadowsocks-libev start    # for sysvinit, or
+sudo /etc/init.d/shadowsocks-libev start    # for sysvinit
 sudo systemctl start shadowsocks-libev      # for systemd
 ```
 
