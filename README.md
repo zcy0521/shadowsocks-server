@@ -94,99 +94,6 @@ sudo sysctl --system
 
 ## 线路优化
 
-### Shadowsocks
-
-- Server
-
-```shell script
-./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
-```
-
-- Client
-
-```shell script
-./ss-redir -l 1234 -s [SS_SERVER_IP] -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305 -t
-./ss-redir -l 1234 -s [SS_SERVER_IP] -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305 -u
-```
-
-### kcptun
-
-[Github](https://github.com/xtaci/kcptun)
-
-- Server
-
-```shell script
-./server_linux_amd64 -l ":4000" -t "127.0.0.1:443" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
-./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
-```
-
-- Client
-
-```shell script
-./ss-redir -l 1234 -s 127.0.0.1 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305 -t
-./client_linux_amd64 -l ":8388" -r "[KCP_SERVER_IP]:4000" -mode fast3 -nocomp -autoexpire 900 -sockbuf 16777217 -dscp 46
-```
-
-### kcptun + udp2raw
-
-[Github](https://github.com/wangyu-/udp2raw-tunnel)
-
-- Server
-
-```shell script
-./udp2raw_amd64 -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -k "passwd" --raw-mode faketcp -a
-./server_linux_amd64 -l ":4000" -t "127.0.0.1:443" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
-./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
-```
-
-- Client
-
-```shell script
-./ss-redir -l 1234 -s 127.0.0.1 -p 8389 -k "HelloWorld!" -m chacha20-ietf-poly1305 -t
-./client_linux_amd64 -l ":8389" -r "127.0.0.1:4000" -mode fast3 -nocomp -autoexpire 900 -sockbuf 16777217 -dscp 46
-./udp2raw_amd64 -c -l0.0.0.0:4000 -r[UDP_SERVER_IP]:4001 -k "passwd" --raw-mode faketcp -a
-```
-
-### UDPspeeder
-
-[Github](https://github.com/wangyu-/UDPspeeder)
-
-- Server
-
-```shell script
-./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:443 -f20:10 -k "passwd"
-./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
-```
-
-- Client
-
-```shell script
-./ss-redir -l 1234 -s 127.0.0.1 -p 8390 -k "HelloWorld!" -m chacha20-ietf-poly1305 -u
-./speederv2 -c -l0.0.0.0:8390 -r[UDP_SERVER_IP]:4096 -f20:10 -k "passwd"
-```
-
-### UDPspeeder + udp2raw
-
-[Github](https://github.com/wangyu-/udp2raw-tunnel)
-
-- Server
-
-```shell script
-./udp2raw_amd64 -s -l0.0.0.0:4097 -r 127.0.0.1:4096 -k "passwd" --raw-mode faketcp -a
-./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:443 -f20:10 -k "passwd"
-./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
-```
-
-- Client
-
-```shell script
-./ss-redir -l 1234 -s 127.0.0.1 -p 8391 -k "HelloWorld!" -m chacha20-ietf-poly1305 -u
-./speederv2 -c -l0.0.0.0:8391 -r127.0.0.1:4096 -f20:10 -k "passwd"
-./udp2raw_amd64 -c -l0.0.0.0:4096 -r[UDP_SERVER_IP]:4097 -k "passwd" --raw-mode faketcp -a
-```
-
-## 服务器配置
-
 - 安装 Supervisor
 
 ```shell script
@@ -209,6 +116,13 @@ tar -cjf foo.tar.bz2 bar/
 ```
 
 ### kcptun
+
+[Github](https://github.com/xtaci/kcptun)
+
+```shell script
+./server_linux_amd64 -l ":4000" -t "127.0.0.1:443" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
+./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
+```
 
 - 下载 kcptun
 
@@ -233,6 +147,14 @@ sudo service supervisor restart
 ```
 
 ### kcptun + udp2raw
+
+[Github](https://github.com/wangyu-/udp2raw-tunnel)
+
+```shell script
+./udp2raw_amd64 -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -k "passwd" --raw-mode faketcp -a
+./server_linux_amd64 -l ":4000" -t "127.0.0.1:443" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
+./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
+```
 
 - 下载 kcptun
 
@@ -268,6 +190,13 @@ sudo service supervisor restart
 
 ### UDPspeeder
 
+[Github](https://github.com/wangyu-/UDPspeeder)
+
+```shell script
+./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:443 -f20:10 -k "passwd"
+./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
+```
+
 - 下载 UDPspeeder
 
 ```shell script
@@ -285,6 +214,14 @@ sudo service supervisor restart
 ```
 
 ### UDPspeeder + udp2raw
+
+[Github](https://github.com/wangyu-/udp2raw-tunnel)
+
+```shell script
+./udp2raw_amd64 -s -l0.0.0.0:4097 -r 127.0.0.1:4096 -k "passwd" --raw-mode faketcp -a
+./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:443 -f20:10 -k "passwd"
+./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
+```
 
 - 下载 UDPspeeder
 
