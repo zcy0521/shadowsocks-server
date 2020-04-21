@@ -34,7 +34,7 @@ sudo systemctl start shadowsocks-libev      # for systemd
 
 ### Docker
 
-[Docker](https://hub.docker.com/r/shadowsocks/shadowsocks-libev)
+[DockerHub](https://hub.docker.com/r/shadowsocks/shadowsocks-libev)
 
 [Github](https://github.com/shadowsocks/shadowsocks-libev/tree/master/docker/alpine)
 
