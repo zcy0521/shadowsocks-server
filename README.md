@@ -117,7 +117,7 @@ tar -cjf foo.tar.bz2 bar/
 
 ### kcptun
 
-[Github](https://github.com/xtaci/kcptun)
+[kcptun Github](https://github.com/xtaci/kcptun)
 
 ```shell script
 ./server_linux_amd64 -l ":4000" -t "127.0.0.1:443" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
@@ -148,7 +148,7 @@ sudo service supervisor restart
 
 ### kcptun + udp2raw
 
-[Github](https://github.com/wangyu-/udp2raw-tunnel)
+[udp2raw Github](https://github.com/wangyu-/udp2raw-tunnel)
 
 ```shell script
 ./udp2raw_amd64 -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -k "passwd" --raw-mode faketcp -a
@@ -174,7 +174,7 @@ sudo service supervisor restart
 
 ### UDPspeeder
 
-[Github](https://github.com/wangyu-/UDPspeeder)
+[UDPspeeder Github](https://github.com/wangyu-/UDPspeeder)
 
 ```shell script
 ./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:443 -f20:10 -k "passwd"
@@ -199,7 +199,7 @@ sudo service supervisor restart
 
 ### UDPspeeder + udp2raw
 
-[Github](https://github.com/wangyu-/udp2raw-tunnel)
+[udp2raw Github](https://github.com/wangyu-/udp2raw-tunnel)
 
 ```shell script
 ./udp2raw_amd64 -s -l0.0.0.0:4097 -r 127.0.0.1:4096 -k "passwd" --raw-mode faketcp -a
