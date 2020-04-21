@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  shadowsocks:
+    image: shadowsocks/shadowsocks-libev
+    restart: always
+    network_mode: "bridge"
+    container_name: shadowsocks
+    ports:
+      - "443:8388"
+      - "443:8388/udp"
+    environment:
+      - METHOD=chacha20-ietf-poly1305
+      - PASSWORD=HelloWorld!
