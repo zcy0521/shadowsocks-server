@@ -47,7 +47,7 @@ sudo docker pull shadowsocks/shadowsocks-libev
 - 运行容器
 
 ```shell script
-git clone https://github.com/zcy0521/shadowsocks-docker.git
+git clone https://github.com/zcy0521/shadowsocks-server.git
 cd shadowsocks-docker
 sudo docker-compose up -d
 ```
