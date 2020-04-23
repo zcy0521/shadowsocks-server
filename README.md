@@ -167,13 +167,15 @@ sudo chmod +x /usr/bin/kcptun
 - 配置 kcptun [参数优化](https://github.com/xtaci/kcptun/issues/251)
 
 ```shell script
-sudo cp kcptun/server/config.json /etc/config/kcptun.json
+sudo mkdir -p /etc/kcptun
+sudo cp kcptun/config.json /etc/kcptun/
 ```
 
 - 运行 kcptun
 
 ```shell script
-sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/kcptun.conf
+sudo mkdir -p /etc/supervisor/conf.d
+sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
 ```
 
@@ -194,13 +196,15 @@ sudo chmod +x /usr/bin/kcptun
 - 配置 kcptun [参数优化](https://github.com/xtaci/kcptun/issues/251)
 
 ```shell script
-sudo cp kcptun/server/config.json /etc/config/kcptun.json
+sudo mkdir -p /etc/kcptun
+sudo cp kcptun/config.json /etc/kcptun/
 ```
 
 - 运行 kcptun
 
 ```shell script
-sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/kcptun.conf
+sudo mkdir -p /etc/supervisor/conf.d
+sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
 ```
 
@@ -216,7 +220,8 @@ sudo chmod +x /usr/bin/udp2raw
 - 运行 udp2raw
 
 ```shell script
-sudo cp supervisor/udp2raw_kcptun.conf /etc/supervisor/conf.d/udp2raw_kcptun.conf
+sudo mkdir -p /etc/supervisor/conf.d
+sudo cp supervisor/udp2raw_kcptun.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
 ```
 
@@ -236,7 +241,8 @@ sudo chmod +x /usr/bin/speederv2
 - 运行 UDPspeeder [参数优化](https://github.com/wangyu-/UDPspeeder/wiki/%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE)
 
 ```shell script
-sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/speederv2.conf
+sudo mkdir -p /etc/supervisor/conf.d
+sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
 ```
 
@@ -257,7 +263,8 @@ sudo chmod +x /usr/bin/speederv2
 - 运行 UDPspeeder [参数优化](https://github.com/wangyu-/UDPspeeder/wiki/%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE)
 
 ```shell script
-sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/speederv2.conf
+sudo mkdir -p /etc/supervisor/conf.d
+sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
 ```
 
@@ -273,6 +280,7 @@ sudo chmod +x /usr/bin/udp2raw
 - 运行 udp2raw
 
 ```shell script
-sudo cp supervisor/udp2raw_speederv2.conf /etc/supervisor/conf.d/udp2raw_speederv2.conf
+sudo mkdir -p /etc/supervisor/conf.d
+sudo cp supervisor/udp2raw_speederv2.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
 ```
