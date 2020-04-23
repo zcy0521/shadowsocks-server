@@ -179,7 +179,30 @@ sudo service supervisor restart
 
 ### kcptun + udp2raw
 
+[kcptun Github](https://github.com/xtaci/kcptun)
 [udp2raw Github](https://github.com/wangyu-/udp2raw-tunnel)
+
+- 下载 kcptun
+
+```shell script
+wget https://github.com/xtaci/kcptun/releases/download/v20200409/kcptun-linux-amd64-20200409.tar.gz
+tar -xzf kcptun-linux-amd64-20200409.tar.gz
+sudo cp server_linux_amd64 /usr/bin/kcptun
+sudo chmod +x /usr/bin/kcptun
+```
+
+- 配置 kcptun [参数优化](https://github.com/xtaci/kcptun/issues/251)
+
+```shell script
+sudo cp kcptun/server/config.json /etc/config/kcptun.json
+```
+
+- 运行 kcptun
+
+```shell script
+sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/kcptun.conf
+sudo service supervisor restart
+```
 
 - 下载 udp2raw
 
@@ -210,7 +233,7 @@ sudo cp speederv2_amd64 /usr/bin/speederv2
 sudo chmod +x /usr/bin/speederv2
 ```
 
-- 运行 UDPspeeder
+- 运行 UDPspeeder [参数优化](https://github.com/wangyu-/UDPspeeder/wiki/%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE)
 
 ```shell script
 sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/speederv2.conf
@@ -219,7 +242,24 @@ sudo service supervisor restart
 
 ### UDPspeeder + udp2raw
 
+[UDPspeeder Github](https://github.com/wangyu-/UDPspeeder)
 [udp2raw Github](https://github.com/wangyu-/udp2raw-tunnel)
+
+- 下载 UDPspeeder
+
+```shell script
+wget https://github.com/wangyu-/UDPspeeder/releases/download/20190121.0/speederv2_binaries.tar.gz
+tar -xzf speederv2_binaries.tar.gz
+sudo cp speederv2_amd64 /usr/bin/speederv2
+sudo chmod +x /usr/bin/speederv2
+```
+
+- 运行 UDPspeeder [参数优化](https://github.com/wangyu-/UDPspeeder/wiki/%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE)
+
+```shell script
+sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/speederv2.conf
+sudo service supervisor restart
+```
 
 - 下载 udp2raw
 
