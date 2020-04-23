@@ -124,31 +124,31 @@ tar -cjf foo.tar.bz2 bar/
 - kcptun
 
 ```shell script
-./server_linux_amd64 -l ":4000" -t "127.0.0.1:443" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
-./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
+./server_linux_amd64 -l ":4000" -t "127.0.0.1:8388" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
+./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
 ```
 
 - kcptun + udp2raw
 
 ```shell script
 ./udp2raw_amd64 -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -k "passwd" --raw-mode faketcp -a
-./server_linux_amd64 -l ":4000" -t "127.0.0.1:443" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
-./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
+./server_linux_amd64 -l ":4000" -t "127.0.0.1:8388" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
+./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
 ```
 
 - UDPspeeder
 
 ```shell script
-./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:443 -f20:10 -k "passwd"
-./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
+./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:8388 -f20:10 -k "passwd"
+./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
 ```
 
 - UDPspeeder + udp2raw
 
 ```shell script
 ./udp2raw_amd64 -s -l0.0.0.0:4097 -r 127.0.0.1:4096 -k "passwd" --raw-mode faketcp -a
-./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:443 -f20:10 -k "passwd"
-./ss-server -s 0.0.0.0 -p 443 -k "HelloWorld!" -m chacha20-ietf-poly1305
+./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:8388 -f20:10 -k "passwd"
+./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
 ```
 
 ### kcptun
