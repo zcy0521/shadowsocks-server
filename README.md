@@ -138,41 +138,11 @@ tar -xjf foo.tar.bz2
 tar -cjf foo.tar.bz2 bar/
 ```
 
-- kcptun
-
-```shell script
-./server_linux_amd64 -l ":4000" -t "127.0.0.1:8388" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
-./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
-```
-
-- UDPspeeder
-
-```shell script
-./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:8388 -f20:10 -k "passwd"
-./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
-```
-
-- kcptun + udp2raw
-
-```shell script
-./udp2raw_amd64 -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -k "passwd" --raw-mode faketcp -a
-./server_linux_amd64 -l ":4000" -t "127.0.0.1:8388" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
-./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
-```
-
-- UDPspeeder + udp2raw
-
-```shell script
-./udp2raw_amd64 -s -l0.0.0.0:4097 -r 127.0.0.1:4096 -k "passwd" --raw-mode faketcp -a
-./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:8388 -f20:10 -k "passwd"
-./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
-```
-
 ### kcptun
 
 [kcptun Github](https://github.com/xtaci/kcptun)
 
-- 下载 kcptun
+- 下载
 
 ```shell script
 wget https://github.com/xtaci/kcptun/releases/download/v20200409/kcptun-linux-amd64-20200409.tar.gz
@@ -181,14 +151,20 @@ sudo cp server_linux_amd64 /usr/bin/kcptun
 sudo chmod +x /usr/bin/kcptun
 ```
 
-- 配置 kcptun [参数优化](https://github.com/xtaci/kcptun/issues/251)
+- 配置 [参数优化](https://github.com/xtaci/kcptun/issues/251)
 
 ```shell script
 sudo mkdir -p /etc/kcptun
 sudo cp kcptun/config.json /etc/kcptun/
 ```
 
-- 运行 kcptun
+- 运行
+
+```shell script
+/usr/bin/kcptun -c /etc/kcptun/config.json &
+```
+
+- Supervisor
 
 ```shell script
 sudo mkdir -p /etc/supervisor/conf.d
@@ -201,7 +177,7 @@ ps aux | grep kcptun
 
 [UDPspeeder Github](https://github.com/wangyu-/UDPspeeder)
 
-- 下载 UDPspeeder
+- 下载
 
 ```shell script
 wget https://github.com/wangyu-/UDPspeeder/releases/download/20190121.0/speederv2_binaries.tar.gz
@@ -210,7 +186,13 @@ sudo cp speederv2_amd64 /usr/bin/speederv2
 sudo chmod +x /usr/bin/speederv2
 ```
 
-- 运行 UDPspeeder [参数优化](https://github.com/wangyu-/UDPspeeder/wiki/%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE)
+- 运行 [参数优化](https://github.com/wangyu-/UDPspeeder/wiki/%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE)
+
+```shell script
+/usr/bin/speederv2 -s -l0.0.0.0:4096 -r127.0.0.1:8388 -k "passwd" -f2:4 --timeout 1 &>/var/log/speederv2.log &
+```
+
+- Supervisor
 
 ```shell script
 sudo mkdir -p /etc/supervisor/conf.d
@@ -224,43 +206,42 @@ ps aux | grep speederv2
 [kcptun Github](https://github.com/xtaci/kcptun)
 [udp2raw Github](https://github.com/wangyu-/udp2raw-tunnel)
 
-- 下载 kcptun
+- 下载
 
 ```shell script
 wget https://github.com/xtaci/kcptun/releases/download/v20200409/kcptun-linux-amd64-20200409.tar.gz
 tar -xzf kcptun-linux-amd64-20200409.tar.gz
 sudo cp server_linux_amd64 /usr/bin/kcptun
 sudo chmod +x /usr/bin/kcptun
-```
 
-- 配置 kcptun [参数优化](https://github.com/xtaci/kcptun/issues/251)
-
-```shell script
-sudo mkdir -p /etc/kcptun
-sudo cp kcptun/config.json /etc/kcptun/
-```
-
-- 运行 kcptun
-
-```shell script
-sudo mkdir -p /etc/supervisor/conf.d
-sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/
-sudo service supervisor restart
-ps aux | grep kcptun
-```
-
-- 下载 udp2raw
-
-```shell script
 wget https://github.com/wangyu-/udp2raw-tunnel/releases/download/20181113.0/udp2raw_binaries.tar.gz
 tar -xzf udp2raw_binaries.tar.gz
 sudo cp udp2raw_amd64 /usr/bin/udp2raw
 sudo chmod +x /usr/bin/udp2raw
 ```
 
-- 运行 udp2raw
+- 配置 [参数优化](https://github.com/xtaci/kcptun/issues/251)
 
 ```shell script
+sudo mkdir -p /etc/kcptun
+sudo cp kcptun/config.json /etc/kcptun/
+```
+
+- 运行
+
+```shell script
+/usr/bin/udp2raw -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -k "passwd" --raw-mode faketcp -a &>/var/log/udp2raw_kcptun.log &
+/usr/bin/kcptun -c /etc/kcptun/config.json &
+```
+
+- Supervisor
+
+```shell script
+sudo mkdir -p /etc/supervisor/conf.d
+sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/
+sudo service supervisor restart
+ps aux | grep kcptun
+
 sudo mkdir -p /etc/supervisor/conf.d
 sudo cp supervisor/udp2raw_kcptun.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
@@ -279,29 +260,28 @@ wget https://github.com/wangyu-/UDPspeeder/releases/download/20190121.0/speederv
 tar -xzf speederv2_binaries.tar.gz
 sudo cp speederv2_amd64 /usr/bin/speederv2
 sudo chmod +x /usr/bin/speederv2
-```
 
-- 运行 UDPspeeder [参数优化](https://github.com/wangyu-/UDPspeeder/wiki/%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE)
-
-```shell script
-sudo mkdir -p /etc/supervisor/conf.d
-sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/
-sudo service supervisor restart
-ps aux | grep speederv2
-```
-
-- 下载 udp2raw
-
-```shell script
 wget https://github.com/wangyu-/udp2raw-tunnel/releases/download/20181113.0/udp2raw_binaries.tar.gz
 tar -xzf udp2raw_binaries.tar.gz
 sudo cp udp2raw_amd64 /usr/bin/udp2raw
 sudo chmod +x /usr/bin/udp2raw
 ```
 
-- 运行 udp2raw
+- 运行
 
 ```shell script
+/usr/bin/udp2raw -s -l0.0.0.0:4097 -r 127.0.0.1:4096 -k "passwd" --raw-mode faketcp -a &>/var/log/udp2raw_speederv2.log &
+/usr/bin/speederv2 -s -l0.0.0.0:4096 -r127.0.0.1:8388 -k "passwd" -f2:4 --timeout 1 &>/var/log/speederv2.log &
+```
+
+- Supervisor
+
+```shell script
+sudo mkdir -p /etc/supervisor/conf.d
+sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/
+sudo service supervisor restart
+ps aux | grep speederv2
+
 sudo mkdir -p /etc/supervisor/conf.d
 sudo cp supervisor/udp2raw_speederv2.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
