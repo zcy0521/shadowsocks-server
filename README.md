@@ -21,7 +21,7 @@ sudo apt -t stretch-backports install shadowsocks-libev
 ```shell script
 sudo vim /etc/shadowsocks-libev/config.json
 {
-    "server":["::1", "127.0.0.1"],
+    "server":"0.0.0.0",
     "mode":"tcp_and_udp",
     "server_port":8388,
     "local_port":1080,
@@ -123,7 +123,6 @@ execute `sudo sysctl -p`
 ```shell script
 sudo apt update
 sudo apt install supervisor
-ps aux | grep kcptun
 ```
 
 - [压缩/解压](https://manpages.debian.org/buster/manpages-zh/tar.1.zh_CN.html)
@@ -146,18 +145,18 @@ tar -cjf foo.tar.bz2 bar/
 ./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
 ```
 
+- UDPspeeder
+
+```shell script
+./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:8388 -f20:10 -k "passwd"
+./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
+```
+
 - kcptun + udp2raw
 
 ```shell script
 ./udp2raw_amd64 -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -k "passwd" --raw-mode faketcp -a
 ./server_linux_amd64 -l ":4000" -t "127.0.0.1:8388" -mode fast3 -nocomp -sockbuf 16777217 -dscp 46
-./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
-```
-
-- UDPspeeder
-
-```shell script
-./speederv2 -s -l0.0.0.0:4096 -r 127.0.0.1:8388 -f20:10 -k "passwd"
 ./ss-server -s 0.0.0.0 -p 8388 -k "HelloWorld!" -m chacha20-ietf-poly1305
 ```
 
@@ -195,6 +194,29 @@ sudo cp kcptun/config.json /etc/kcptun/
 sudo mkdir -p /etc/supervisor/conf.d
 sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
+ps aux | grep kcptun
+```
+
+### UDPspeeder
+
+[UDPspeeder Github](https://github.com/wangyu-/UDPspeeder)
+
+- 下载 UDPspeeder
+
+```shell script
+wget https://github.com/wangyu-/UDPspeeder/releases/download/20190121.0/speederv2_binaries.tar.gz
+tar -xzf speederv2_binaries.tar.gz
+sudo cp speederv2_amd64 /usr/bin/speederv2
+sudo chmod +x /usr/bin/speederv2
+```
+
+- 运行 UDPspeeder [参数优化](https://github.com/wangyu-/UDPspeeder/wiki/%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE)
+
+```shell script
+sudo mkdir -p /etc/supervisor/conf.d
+sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/
+sudo service supervisor restart
+ps aux | grep speederv2
 ```
 
 ### kcptun + udp2raw
@@ -224,6 +246,7 @@ sudo cp kcptun/config.json /etc/kcptun/
 sudo mkdir -p /etc/supervisor/conf.d
 sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
+ps aux | grep kcptun
 ```
 
 - 下载 udp2raw
@@ -241,27 +264,7 @@ sudo chmod +x /usr/bin/udp2raw
 sudo mkdir -p /etc/supervisor/conf.d
 sudo cp supervisor/udp2raw_kcptun.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
-```
-
-### UDPspeeder
-
-[UDPspeeder Github](https://github.com/wangyu-/UDPspeeder)
-
-- 下载 UDPspeeder
-
-```shell script
-wget https://github.com/wangyu-/UDPspeeder/releases/download/20190121.0/speederv2_binaries.tar.gz
-tar -xzf speederv2_binaries.tar.gz
-sudo cp speederv2_amd64 /usr/bin/speederv2
-sudo chmod +x /usr/bin/speederv2
-```
-
-- 运行 UDPspeeder [参数优化](https://github.com/wangyu-/UDPspeeder/wiki/%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE)
-
-```shell script
-sudo mkdir -p /etc/supervisor/conf.d
-sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/
-sudo service supervisor restart
+ps aux | grep udp2raw
 ```
 
 ### UDPspeeder + udp2raw
@@ -284,6 +287,7 @@ sudo chmod +x /usr/bin/speederv2
 sudo mkdir -p /etc/supervisor/conf.d
 sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
+ps aux | grep speederv2
 ```
 
 - 下载 udp2raw
@@ -301,4 +305,5 @@ sudo chmod +x /usr/bin/udp2raw
 sudo mkdir -p /etc/supervisor/conf.d
 sudo cp supervisor/udp2raw_speederv2.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
+ps aux | grep udp2raw
 ```
