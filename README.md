@@ -63,27 +63,26 @@ sudo docker-compose up -d
 - 编辑`/etc/sysctl.conf`
 
 ```shell script
-$ sudo vi /etc/sysctl.conf
+sudo vi /etc/sysctl.conf
 net.ipv4.tcp_congestion_control=bbr
 net.core.default_qdisc=fq
-
-$ sudo sysctl -p
 ```
+
+> 执行`sudo sysctl -p`
 
 ## [Optimize the shadowsocks server on Linux](http://shadowsocks.org/en/config/advanced.html)
 
 - 编辑`/etc/security/limits.conf`
 
 ```shell script
-$ sudo vi `/etc/security/limits.conf`
+sudo vi `/etc/security/limits.conf`
 * soft nofile 51200
 * hard nofile 51200
 root soft nofile 51200
 root hard nofile 51200
-
-$ ulimit -n 51200
-$ sudo /etc/init.d/shadowsocks-libev restart
 ```
+
+> 执行`ulimit -n 51200`
 
 - 编辑`/etc/sysctl.conf`
 
@@ -108,9 +107,9 @@ net.ipv4.tcp_rmem = 4096 87380 67108864
 net.ipv4.tcp_wmem = 4096 65536 67108864
 net.ipv4.tcp_mtu_probing = 1
 net.ipv4.tcp_congestion_control = hybla
-
-$ sudo sysctl -p
 ```
+
+> 执行`sudo sysctl -p`
 
 ## kcptun
 
@@ -163,14 +162,18 @@ sudo chmod +x /usr/bin/udp2raw
 sudo setcap cap_net_raw+ep /usr/bin/udp2raw
 ```
 
-- 生成并添加iptables规则
+- 生成iptables规则
 
 ```shell script
-$ ./udp2raw -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -g
+./udp2raw -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -g
 generated iptables rule:
 iptables -I INPUT -p tcp -m tcp --dport 4001 -j DROP
+```
 
-$ sudo iptables -I INPUT -p tcp -m tcp --dport 4001 -j DROP
+- 添加iptables规则
+
+```shell script
+sudo iptables -I INPUT -p tcp -m tcp --dport 4001 -j DROP
 ```
 
 - 运行`udp2raw_kcptun`服务 以`nobody`省略`-a`参数运行
@@ -227,14 +230,18 @@ sudo chmod +x /usr/bin/udp2raw
 sudo setcap cap_net_raw+ep /usr/bin/udp2raw
 ```
 
-- 生成并添加iptables规则
+- 生成iptables规则
 
 ```shell script
-$ ./udp2raw -s -l0.0.0.0:4097 -r 127.0.0.1:4096 -g
+./udp2raw -s -l0.0.0.0:4097 -r 127.0.0.1:4096 -g
 generated iptables rule:
 iptables -I INPUT -p tcp -m tcp --dport 4097 -j DROP
+```
 
-$ sudo iptables -I INPUT -p tcp -m tcp --dport 4097 -j DROP
+- 添加iptables规则
+
+```shell script
+sudo iptables -I INPUT -p tcp -m tcp --dport 4097 -j DROP
 ```
 
 - 运行`udp2raw_kcptun`服务 以`nobody`省略`-a`参数运行
