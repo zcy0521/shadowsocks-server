@@ -4,7 +4,7 @@
   "key": "x",
   "crypt": "aes-128",
   "mode": "manual",
-  "mtu": 1400,
+  "mtu": 1300,
   "sndwnd": 1024,
   "rcvwnd": 1024,
   "datashard": 30,

@@ -58,46 +58,42 @@ cd shadowsocks-server
 sudo docker-compose up -d
 ```
 
-## 服务器优化
+## [bbr](https://github.com/google/bbr)
 
-### [bbr](https://github.com/google/bbr)
-
-- sudo vi `/etc/sysctl.conf`
+- 编辑`/etc/sysctl.conf`
 
 ```shell script
+$ sudo vi /etc/sysctl.conf
 net.ipv4.tcp_congestion_control=bbr
 net.core.default_qdisc=fq
+
+$ sudo sysctl -p
 ```
 
-execute `sudo sysctl -p`
+## [Optimize the shadowsocks server on Linux](http://shadowsocks.org/en/config/advanced.html)
 
-### [Optimize the shadowsocks server on Linux](http://shadowsocks.org/en/config/advanced.html)
-
-- sudo vi `/etc/security/limits.conf`
+- 编辑`/etc/security/limits.conf`
 
 ```shell script
+$ sudo vi `/etc/security/limits.conf`
 * soft nofile 51200
 * hard nofile 51200
 root soft nofile 51200
 root hard nofile 51200
+
+$ ulimit -n 51200
+$ sudo /etc/init.d/shadowsocks-libev restart
 ```
 
-Then, before you start the shadowsocks server, set the ulimit first
+- 编辑`/etc/sysctl.conf`
 
 ```shell script
-ulimit -n 51200
-```
-
-- sudo vi `/etc/sysctl.conf`
-
-```shell script
+$ sudo vi `/etc/sysctl.conf`
 fs.file-max = 51200
-
 net.core.rmem_max = 67108864
 net.core.wmem_max = 67108864
 net.core.netdev_max_backlog = 250000
 net.core.somaxconn = 4096
-
 net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_tw_reuse = 1
 net.ipv4.tcp_tw_recycle = 0
@@ -112,37 +108,17 @@ net.ipv4.tcp_rmem = 4096 87380 67108864
 net.ipv4.tcp_wmem = 4096 65536 67108864
 net.ipv4.tcp_mtu_probing = 1
 net.ipv4.tcp_congestion_control = hybla
+
+$ sudo sysctl -p
 ```
 
-execute `sudo sysctl -p`
-
-## 线路优化
-
-- 安装 Supervisor
-
-```shell script
-sudo apt update
-sudo apt install supervisor
-```
-
-- [压缩/解压](https://manpages.debian.org/buster/manpages-zh/tar.1.zh_CN.html)
-
-```shell script
-tar -xf foo.tar
-tar -cf foo.tar bar/
-
-tar -xzf foo.tar.gz
-tar -czf foo.tar.gz bar/
-
-tar -xjf foo.tar.bz2
-tar -cjf foo.tar.bz2 bar/
-```
-
-### kcptun
+## kcptun
 
 [kcptun Github](https://github.com/xtaci/kcptun)
 
-- 下载
+### 独立运行
+
+- 下载`kcptun`
 
 ```shell script
 wget https://github.com/xtaci/kcptun/releases/download/v20200409/kcptun-linux-amd64-20200409.tar.gz
@@ -151,139 +127,122 @@ sudo cp server_linux_amd64 /usr/bin/kcptun
 sudo chmod +x /usr/bin/kcptun
 ```
 
-- 配置 [参数优化](https://github.com/xtaci/kcptun/issues/251)
+- 配置`kcptun` [参数优化](https://github.com/xtaci/kcptun/issues/251)
 
 ```shell script
 sudo mkdir -p /etc/kcptun
 sudo cp kcptun/config.json /etc/kcptun/
 ```
 
-- 运行
+- 运行`kcptun`服务
+
+> ./kcptun -c /etc/kcptun/config.json &
 
 ```shell script
-/usr/bin/kcptun -c /etc/kcptun/config.json &
-```
-
-- Supervisor
-
-```shell script
-sudo mkdir -p /etc/supervisor/conf.d
+sudo apt install supervisor
 sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
-ps aux | grep kcptun
 ```
 
-### UDPspeeder
+### 配合udp2raw
 
-[UDPspeeder Github](https://github.com/wangyu-/UDPspeeder)
-
-- 下载
-
-```shell script
-wget https://github.com/wangyu-/UDPspeeder/releases/download/20190121.0/speederv2_binaries.tar.gz
-tar -xzf speederv2_binaries.tar.gz
-sudo cp speederv2_amd64 /usr/bin/speederv2
-sudo chmod +x /usr/bin/speederv2
-```
-
-- 运行 [参数优化](https://github.com/wangyu-/UDPspeeder/wiki/%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE)
-
-```shell script
-/usr/bin/speederv2 -s -l0.0.0.0:4096 -r127.0.0.1:8388 -k "passwd" -f2:4 --timeout 1 &>/var/log/speederv2.log &
-```
-
-- Supervisor
-
-```shell script
-sudo mkdir -p /etc/supervisor/conf.d
-sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/
-sudo service supervisor restart
-ps aux | grep speederv2
-```
-
-### kcptun + udp2raw
-
-[kcptun Github](https://github.com/xtaci/kcptun)
 [udp2raw Github](https://github.com/wangyu-/udp2raw-tunnel)
 
-- 下载
+- 下载`udp2raw`
 
 ```shell script
-wget https://github.com/xtaci/kcptun/releases/download/v20200409/kcptun-linux-amd64-20200409.tar.gz
-tar -xzf kcptun-linux-amd64-20200409.tar.gz
-sudo cp server_linux_amd64 /usr/bin/kcptun
-sudo chmod +x /usr/bin/kcptun
-
 wget https://github.com/wangyu-/udp2raw-tunnel/releases/download/20181113.0/udp2raw_binaries.tar.gz
 tar -xzf udp2raw_binaries.tar.gz
 sudo cp udp2raw_amd64 /usr/bin/udp2raw
 sudo chmod +x /usr/bin/udp2raw
 ```
 
-- 配置 [参数优化](https://github.com/xtaci/kcptun/issues/251)
+- 授予`udp2raw` `CAP_NET_RAW`
 
 ```shell script
-sudo mkdir -p /etc/kcptun
-sudo cp kcptun/config.json /etc/kcptun/
+sudo setcap cap_net_raw+ep /usr/bin/udp2raw
 ```
 
-- 运行
+- 生成并添加iptables规则
 
 ```shell script
-/usr/bin/udp2raw -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -k "passwd" --raw-mode faketcp -a &>/var/log/udp2raw_kcptun.log &
-/usr/bin/kcptun -c /etc/kcptun/config.json &
+$ ./udp2raw -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -g
+generated iptables rule:
+iptables -I INPUT -p tcp -m tcp --dport 4001 -j DROP
+
+$ sudo iptables -I INPUT -p tcp -m tcp --dport 4001 -j DROP
 ```
 
-- Supervisor
+- 运行`udp2raw_kcptun`服务 以`nobody`省略`-a`参数运行
+
+> sudo -u nobody ./udp2raw_amd64 -s -l0.0.0.0:4001 -r 127.0.0.1:4000 -k "passwd" --raw-mode faketcp &>/var/log/udp2raw_kcptun.log &
 
 ```shell script
-sudo mkdir -p /etc/supervisor/conf.d
-sudo cp supervisor/kcptun.conf /etc/supervisor/conf.d/
-sudo service supervisor restart
-ps aux | grep kcptun
-
-sudo mkdir -p /etc/supervisor/conf.d
+sudo apt install supervisor
 sudo cp supervisor/udp2raw_kcptun.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
-ps aux | grep udp2raw
 ```
 
-### UDPspeeder + udp2raw
+## UDPspeeder
 
 [UDPspeeder Github](https://github.com/wangyu-/UDPspeeder)
-[udp2raw Github](https://github.com/wangyu-/udp2raw-tunnel)
 
-- 下载 UDPspeeder
+### 独立运行
+
+- 下载`speederv2`
 
 ```shell script
 wget https://github.com/wangyu-/UDPspeeder/releases/download/20190121.0/speederv2_binaries.tar.gz
 tar -xzf speederv2_binaries.tar.gz
 sudo cp speederv2_amd64 /usr/bin/speederv2
 sudo chmod +x /usr/bin/speederv2
+```
 
+- 运行`speederv2`服务 [参数优化](https://github.com/wangyu-/UDPspeeder/wiki/%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE)
+
+> ./speederv2 -s -l0.0.0.0:4096 -r127.0.0.1:8388 -k "passwd" -f2:4 --timeout 1 &>/var/log/speederv2.log &
+
+```shell script
+sudo apt install supervisor
+sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/
+sudo service supervisor restart
+```
+
+### 配合udp2raw
+
+[udp2raw Github](https://github.com/wangyu-/udp2raw-tunnel)
+
+- 下载`udp2raw`
+
+```shell script
 wget https://github.com/wangyu-/udp2raw-tunnel/releases/download/20181113.0/udp2raw_binaries.tar.gz
 tar -xzf udp2raw_binaries.tar.gz
 sudo cp udp2raw_amd64 /usr/bin/udp2raw
 sudo chmod +x /usr/bin/udp2raw
 ```
 
-- 运行
+- 授予`udp2raw` `CAP_NET_RAW`
 
 ```shell script
-/usr/bin/udp2raw -s -l0.0.0.0:4097 -r 127.0.0.1:4096 -k "passwd" --raw-mode faketcp -a &>/var/log/udp2raw_speederv2.log &
-/usr/bin/speederv2 -s -l0.0.0.0:4096 -r127.0.0.1:8388 -k "passwd" -f2:4 --timeout 1 &>/var/log/speederv2.log &
+sudo setcap cap_net_raw+ep /usr/bin/udp2raw
 ```
 
-- Supervisor
+- 生成并添加iptables规则
 
 ```shell script
-sudo mkdir -p /etc/supervisor/conf.d
-sudo cp supervisor/speederv2.conf /etc/supervisor/conf.d/
-sudo service supervisor restart
-ps aux | grep speederv2
+$ ./udp2raw -s -l0.0.0.0:4097 -r 127.0.0.1:4096 -g
+generated iptables rule:
+iptables -I INPUT -p tcp -m tcp --dport 4097 -j DROP
 
-sudo mkdir -p /etc/supervisor/conf.d
+$ sudo iptables -I INPUT -p tcp -m tcp --dport 4097 -j DROP
+```
+
+- 运行`udp2raw_kcptun`服务 以`nobody`省略`-a`参数运行
+
+> sudo -u nobody ./udp2raw -s -l0.0.0.0:4097 -r 127.0.0.1:4096 -k "passwd" --raw-mode faketcp &>/var/log/udp2raw_speederv2.log &
+
+```shell script
+sudo apt install supervisor
 sudo cp supervisor/udp2raw_speederv2.conf /etc/supervisor/conf.d/
 sudo service supervisor restart
-ps aux | grep udp2raw
 ```
