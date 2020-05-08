@@ -64,8 +64,8 @@ sudo docker-compose up -d
 
 ```shell script
 sudo vi /etc/sysctl.conf
-net.ipv4.tcp_congestion_control=bbr
 net.core.default_qdisc=fq
+net.ipv4.tcp_congestion_control=bbr
 ```
 
 > 执行`sudo sysctl -p`
