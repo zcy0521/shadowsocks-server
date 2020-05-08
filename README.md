@@ -63,7 +63,6 @@ sudo docker-compose up -d
 - 编辑`/etc/sysctl.conf`
 
 ```shell script
-sudo vi /etc/sysctl.conf
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
 ```
@@ -75,7 +74,6 @@ net.ipv4.tcp_congestion_control=bbr
 - 编辑`/etc/security/limits.conf`
 
 ```shell script
-sudo vi `/etc/security/limits.conf`
 * soft nofile 51200
 * hard nofile 51200
 root soft nofile 51200
@@ -87,7 +85,6 @@ root hard nofile 51200
 - 编辑`/etc/sysctl.conf`
 
 ```shell script
-$ sudo vi `/etc/sysctl.conf`
 fs.file-max = 51200
 net.core.rmem_max = 67108864
 net.core.wmem_max = 67108864
