@@ -99,8 +99,11 @@ sudo chmod +x /usr/bin/kcptun
 - 配置`kcptun` [参数优化](https://github.com/xtaci/kcptun/issues/251)
 
 ```shell script
-sudo mkdir -p /etc/kcptun
+sudo mkdir /etc/kcptun
 sudo cp kcptun/config.json /etc/kcptun/config.json
+sudo vi /etc/kcptun/config.json
+"listen": ":4000"
+"target": "127.0.0.1:8388"
 ```
 
 - 运行`kcptun`服务
@@ -114,6 +117,15 @@ sudo service supervisor restart
 ```
 
 ## [udp2raw](https://github.com/wangyu-/udp2raw-tunnel)
+
+- 修改`kcptun`配置
+
+```shell script
+sudo vi /etc/kcptun/config.json
+"listen": ":4000"
+"target": "127.0.0.1:8388"
+"mtu": 1300
+```
 
 - 下载`udp2raw`
 
